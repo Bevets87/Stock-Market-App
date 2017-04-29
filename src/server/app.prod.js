@@ -16,7 +16,7 @@ app.get('*', (req,res) => {
   res.sendFile(path.join(__dirname, '../../dist/index.html'))
 })
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/ReactStarterApp');
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/StockMarketApp');
 
 mongoose.connection.once('open',function(){
   console.log('Connection has been made!')
