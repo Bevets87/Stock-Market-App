@@ -8,7 +8,7 @@
     "remove-build": "node_modules/.bin/rimraf ./dist",
     "dev": "nodemon --watch src/server --exec babel-node -- ./src/server/app.dev.js",
     "prod": "babel-node ./src/server/app.prod.js",
-    "start": "babel-node ./src/server/app.prod.js"
+    "start": "babel-node ./src/server/app.dev.js"
   },
   "author": "steve barton",
   "license": "ISC",
