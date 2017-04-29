@@ -1,0 +1,14 @@
+{
+  "name": "stockmarket-app",
+  "version": "1.0.0",
+  "description": "An app that allows users to add stocks and visualize them on a chart",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "steve barton",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.15.2"
+  }
+}
