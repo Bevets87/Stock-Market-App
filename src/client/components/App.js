@@ -1,36 +1,65 @@
 import React, { Component } from 'react'
 
+import io from 'socket.io-client'
+const socket = io.connect('http://localhost:3000')
+
 import './App.scss'
 
 class App extends Component {
   constructor (props) {
     super (props)
     this.state = {
-      message: ''
+      stock: '',
+      stocks: [],
+      error: null
     }
-    this.handleMessageInput = this.handleMessageInput.bind(this)
-    this.handleSubmitMessage = this.handleSubmitMessage.bind(this)
+    this.handleInputStock = this.handleInputStock.bind(this)
+    this.handleSubmitStock = this.handleSubmitStock.bind(this)
   }
-  handleMessageInput (event) {
-    this.setState({
-      message: event.target.value
+  componentDidMount () {
+    //request stocks from server
+    socket.emit('get-stocks')
+    // receive stocks from server
+    socket.on('stocks', stocks => {
+      console.log(stocks)
+
+    })
+    // receive stock from server
+    socket.on('add-stock', stock => {
+      console.log(stock)
+    })
+    // receive any error from server
+    socket.on('log-error', error => {
+      console.log(error)
+
     })
   }
-  handleSubmitMessage (event) {
-    event.preventDefault()
-    var { message } = this.state
-    var socket = io()
-    socket.emit('message', message)
+  handleInputStock (event) {
     this.setState({
-      message: ''
+      stock: event.target.value
+    })
+  }
+  handleSubmitStock (event) {
+    event.preventDefault()
+    const { stock } = this.state
+    socket.emit('add-stock', stock)
+    socket.emit('get-stocks')
+    this.setState({
+      stock: ''
     })
   }
   render () {
+    var { stocks, stock } = this.state
     return (
       <div className='app-container'>
-        <ul></ul>
-        <input onChange={this.handleMessageInput} type='text' />
-        <button onClick={this.handleSubmitMessage}></button>
+        <h1>Stocks:</h1>
+        <ol className='stocks'>
+          {stocks.map(stock => <li key={stock._id}>{stock.name}</li>)}
+        </ol>
+        <div className='container'>
+          <input onChange={this.handleInputStock} type='text' value={stock}/>
+          <button onClick={this.handleSubmitStock}>Submit</button>
+        </div>
       </div>
     )
   }
