@@ -43,7 +43,7 @@ io.on('connection', socket => {
         })
         stock.save((err, stock) => {
           if (err) return console.error(err)
-          io.emit('add-stock', stock)
+          console.log(stock)
         })
       } else {
         console.log('The stock is already in the database')
@@ -54,7 +54,7 @@ io.on('connection', socket => {
   socket.on('delete-stock', stockToDelete => {
     Stock.findOneAndRemove({name: stockToDelete}, (err, stock) => {
       if (err) return console.error(err)
-      io.emit('delete-stock', stock)
+      console.log(stock)
     })
   })
   /* get stocks from databse, make a req to quandl, emit results */
@@ -71,7 +71,11 @@ io.on('connection', socket => {
             io.emit('stocks', response.data)
           })
           .catch(error => {
-            io.emit('log-error', error)
+            Stock.findOneAndRemove({name: stock.name}, (err, stock) => {
+              if (err) return console.error(err)
+              console.log(stock)
+              io.emit('log-error', 'Invalid stock or request')
+            })
           })
       })
     })

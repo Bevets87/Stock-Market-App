@@ -17,11 +17,15 @@ class App extends Component {
     this.handleSubmitStock = this.handleSubmitStock.bind(this)
   }
   componentDidMount () {
+    const stocks = []
     //request stocks from server
     socket.emit('get-stocks')
     // receive stocks from server
-    socket.on('stocks', stocks => {
-      console.log(stocks)
+    socket.on('stocks', response => {
+      stocks.push(response)
+      this.setState({
+        stocks: stocks
+      })
 
     })
     // receive stock from server
@@ -54,7 +58,7 @@ class App extends Component {
       <div className='app-container'>
         <h1>Stocks:</h1>
         <ol className='stocks'>
-          {stocks.map(stock => <li key={stock._id}>{stock.name}</li>)}
+          {stocks.map(stock => <li key={stock.dataset.id}>{stock.dataset.dataset_code}</li>)}
         </ol>
         <div className='container'>
           <input onChange={this.handleInputStock} type='text' value={stock}/>
