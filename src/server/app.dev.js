@@ -43,10 +43,28 @@ io.on('connection', socket => {
         })
         stock.save((err, stock) => {
           if (err) return console.error(err)
+          console.log('added stock to database')
           console.log(stock)
+          var date = new Date()
+          var start_date = (date.getFullYear() - 1) + '-' + date.getDate() + '-' + date.getDay()
+          var end_date = date.getFullYear() + '-' + date.getDate() + '-' + date.getDay()
+          var api_key = 'JntJ6C3cd_kuJDkJ9pMs'
+          console.log('making request to quandl')
+          axios.get(`https://www.quandl.com/api/v3/datasets/WIKI/${stock.name}.json?start_date=${start_date}&end_date=${end_date}&api_key=${api_key}`)
+          .then(response => {
+            io.emit('add-stock', {name: stock.name, id: stock._id, data: response.data})
+          })
+          .catch(error => {
+            Stock.findOneAndRemove({name: stock.name}, (err, stock) => {
+              if (err) return console.error(err)
+              console.log('deleting stock from the database')
+              console.log(stock)
+              io.emit('log-error','invalid stock or request')
+            })
+          })
         })
       } else {
-        console.log('The stock is already in the database')
+        io.emit('log-error','the stock is already in the database')
       }
     })
   })
@@ -54,11 +72,14 @@ io.on('connection', socket => {
   socket.on('delete-stock', stockToDelete => {
     Stock.findOneAndRemove({name: stockToDelete}, (err, stock) => {
       if (err) return console.error(err)
+      console.log('deleting stock from the database')
       console.log(stock)
+      io.emit('delete-stock', stock)
     })
   })
   /* get stocks from databse, make a req to quandl, emit results */
   socket.on('get-stocks', () => {
+    console.log('initializing stocks from the database')
     Stock.find((err, stocks) => {
       if (err) return console.error(err)
       stocks.map( stock => {
@@ -66,20 +87,18 @@ io.on('connection', socket => {
         var start_date = (date.getFullYear() - 1) + '-' + date.getDate() + '-' + date.getDay()
         var end_date = date.getFullYear() + '-' + date.getDate() + '-' + date.getDay()
         var api_key = 'JntJ6C3cd_kuJDkJ9pMs'
+        console.log('making request to quandl')
         axios.get(`https://www.quandl.com/api/v3/datasets/WIKI/${stock.name}.json?start_date=${start_date}&end_date=${end_date}&api_key=${api_key}`)
           .then(response => {
-            io.emit('stocks', response.data)
+            io.emit('get-stocks', {name: stock.name, id: stock._id, data: response.data})
           })
           .catch(error => {
-            Stock.findOneAndRemove({name: stock.name}, (err, stock) => {
-              if (err) return console.error(err)
-              console.log(stock)
-              io.emit('log-error', 'Invalid stock or request')
-            })
+            console.log(error)
           })
       })
     })
   })
+
 })
 
 /* connect to database in the form of mongodb */

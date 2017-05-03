@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 
+import _ from 'lodash'
+
 import io from 'socket.io-client'
 const socket = io.connect('http://localhost:3000')
 
@@ -18,24 +20,35 @@ class App extends Component {
   }
   componentDidMount () {
     const stocks = []
-    //request stocks from server
+    //get init stocks from database
     socket.emit('get-stocks')
-    // receive stocks from server
-    socket.on('stocks', response => {
-      stocks.push(response)
+    // receive init stocks from database
+    socket.on('get-stocks', stock => {
+      stocks.push(stock)
       this.setState({
         stocks: stocks
       })
-
     })
-    // receive stock from server
-    socket.on('add-stock', stock => {
-      console.log(stock)
-    })
-    // receive any error from server
+    // handle server errors
     socket.on('log-error', error => {
-      console.log(error)
-
+      this.setState({
+        error: error
+      })
+    })
+    // delete stock from database
+    socket.on('delete-stock', stock => {
+      let index = _.findIndex(stocks, {name: stock.name})
+      stocks.splice(index, 1)
+      this.setState({
+        stocks: stocks
+      })
+    })
+    // add stock to the database
+    socket.on('add-stock', stock => {
+      stocks.push(stock)
+      this.setState({
+        stocks: stocks
+      })
     })
   }
   handleInputStock (event) {
@@ -47,24 +60,39 @@ class App extends Component {
     event.preventDefault()
     const { stock } = this.state
     socket.emit('add-stock', stock)
-    socket.emit('get-stocks')
     this.setState({
-      stock: ''
+      stock: '',
+      error: null
     })
   }
+  handleDeleteStock (event) {
+    event.preventDefault()
+    socket.emit('delete-stock', event.target.value)
+  }
   render () {
-    var { stocks, stock } = this.state
+    var { stocks, stock, error } = this.state
     return (
-      <div className='app-container'>
-        <h1>Stocks:</h1>
-        <ol className='stocks'>
-          {stocks.map(stock => <li key={stock.dataset.id}>{stock.dataset.dataset_code}</li>)}
-        </ol>
-        <div className='container'>
-          <input onChange={this.handleInputStock} type='text' value={stock}/>
-          <button onClick={this.handleSubmitStock}>Submit</button>
+      <div>
+      <div className='container-fluid stocks-container'>
+        <div className='row'>
+          {stocks.map(stock => {
+            return (
+              <div key={stock.id} className='col-md-4'>
+                <div className='col-md-12 stock-container'>
+                  <h1>{stock.name}</h1>
+                  <button value={stock.name} onClick={this.handleDeleteStock} className='btn btn-warning'>Delete</button>
+                </div>
+              </div>
+            )
+          })}
         </div>
       </div>
+      <div className='search-container'>
+        <input onChange={this.handleInputStock} type='text' value={stock}/>
+        <button onClick={this.handleSubmitStock}>Submit</button>
+      </div>
+      {error && <h1>{error}</h1>}
+    </div>
     )
   }
 }
