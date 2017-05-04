@@ -5,6 +5,8 @@ import _ from 'lodash'
 import io from 'socket.io-client'
 const socket = io.connect('http://localhost:3000')
 
+import StockChart from './StockChart'
+
 import './App.scss'
 
 class App extends Component {
@@ -18,7 +20,10 @@ class App extends Component {
     this.handleInputStock = this.handleInputStock.bind(this)
     this.handleSubmitStock = this.handleSubmitStock.bind(this)
   }
-  componentDidMount () {
+  componentWillMount () {
+    this.setState({
+      stocks: []
+    })
     const stocks = []
     //get init stocks from database
     socket.emit('get-stocks')
@@ -29,6 +34,8 @@ class App extends Component {
         stocks: stocks
       })
     })
+  }
+  componentDidMount () {
     // handle server errors
     socket.on('log-error', error => {
       this.setState({
@@ -37,17 +44,17 @@ class App extends Component {
     })
     // delete stock from database
     socket.on('delete-stock', stock => {
-      let index = _.findIndex(stocks, {name: stock.name})
-      stocks.splice(index, 1)
+      let index = _.findIndex(this.state.stocks, {name: stock.name})
+      this.state.stocks.splice(index, 1)
       this.setState({
-        stocks: stocks
+        stocks: this.state.stocks
       })
     })
     // add stock to the database
     socket.on('add-stock', stock => {
-      stocks.push(stock)
+      this.state.stocks.push(stock)
       this.setState({
-        stocks: stocks
+        stocks: this.state.stocks
       })
     })
   }
@@ -70,9 +77,10 @@ class App extends Component {
     socket.emit('delete-stock', event.target.value)
   }
   render () {
-    var { stocks, stock, error } = this.state
+    const { stocks, stock, error } = this.state
     return (
       <div>
+      <StockChart stocks={stocks} />
       <div className='container-fluid stocks-container'>
         <div className='row'>
           {stocks.map(stock => {
