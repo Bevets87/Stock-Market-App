@@ -24,11 +24,11 @@ class App extends Component {
     this.setState({
       stocks: []
     })
-    const stocks = []
     //get init stocks from database
     socket.emit('get-stocks')
     // receive init stocks from database
     socket.on('get-stocks', stock => {
+      var stocks = this.state.stocks.slice()
       stocks.push(stock)
       this.setState({
         stocks: stocks
@@ -44,17 +44,19 @@ class App extends Component {
     })
     // delete stock from database
     socket.on('delete-stock', stock => {
-      let index = _.findIndex(this.state.stocks, {name: stock.name})
-      this.state.stocks.splice(index, 1)
+      var stocks = this.state.stocks.slice()
+      let index = _.findIndex(stocks, {name: stock.name})
+      stocks.splice(index, 1)
       this.setState({
-        stocks: this.state.stocks
+        stocks: stocks
       })
     })
     // add stock to the database
     socket.on('add-stock', stock => {
-      this.state.stocks.push(stock)
+      var stocks = this.state.stocks.slice()
+      stocks.push(stock)
       this.setState({
-        stocks: this.state.stocks
+        stocks: stocks
       })
     })
   }

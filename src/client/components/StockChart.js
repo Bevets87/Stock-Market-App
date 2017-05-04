@@ -5,41 +5,15 @@ import ReactHighCharts from 'react-highcharts'
 import './StockChart.scss'
 
 class StockChart extends Component {
-  constructor (props) {
-    super (props)
-    this.state = {
-      initialChartData: null
-    }
-  }
-  componentDidMount () {
-    const { stocks } = this.props
-    let stockData = stocks.map( stock => {
-      return {
-        name: stock.data.dataset.dataset_code,
-        data: stock.data.dataset.data.map( stockData => {
-          return [ stockData[0], stockData[4] ]
-        })
-      }
-    })
-    let chartData = stockData.map( stock => {
-      return {
-        name: stock.name,
-        data: stock.data.reverse()
-      }
-    })
-    this.setState({
-      initialChartData: chartData
-    })
-  }
   shouldComponentUpdate (nextProps) {
-    if (nextProps.stocks.length > this.props.stocks.length ) {
+    if (nextProps.stocks.length !== this.props.stocks.length ) {
       return true
     } else {
       return false
     }
   }
   render () {
-    const { stocks } = this.props
+    let { stocks } = this.props
     let stockData = stocks.map( stock => {
       return {
         name: stock.data.dataset.dataset_code,
