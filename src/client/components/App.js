@@ -3,7 +3,9 @@ import React, { Component } from 'react'
 import _ from 'lodash'
 
 import io from 'socket.io-client'
-const socket = io.connect('https://fcc-stock-market-application.herokuapp.com/')
+//const DEV_HOST = 'http://localhost:3000'
+const PROD_HOST = 'https://fcc-stock-market-application.herokuapp.com/'
+const socket = io.connect(PROD_HOST)
 
 import StockChart from './StockChart'
 
@@ -96,10 +98,12 @@ class App extends Component {
       <div className='container-fluid stocks-container'>
         <div className='row'>
           {stocks.map(stock => {
+            console.log(stock)
             return (
               <div key={stock.id} className='col-sm-2'>
                 <div className='col-sm-12 stock-container'>
-                  <h1>{stock.name}</h1>
+                  <h2>{stock.name}</h2>
+                  <h6>{stock.data.dataset.name}</h6>
                   <button value={stock.name} onClick={this.handleDeleteStock} className='btn'>Delete</button>
                 </div>
               </div>

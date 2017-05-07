@@ -76,8 +76,11 @@
 
 .stock-container {
   margin-top: 50px;
+  height: 150px;
   text-align: center;
-  background: rgba(0,0,0,0.1);
+  background: rgba(0,0,0,0.2);
   border-radius: 10px;
-
+  button {
+    background: white;
+  }
 }
