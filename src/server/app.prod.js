@@ -19,7 +19,7 @@ app.use(express.static(path.join(__dirname, '../../dist' )))
 io.on('connection', socket => {
   /* add stock to database */
   socket.on('add-stock', stockToAdd => {
-    Stock.findOne({name: stockToAdd}, (err, stock) => {
+    Stock.findOne({name: stockToAdd.toUpperCase()}, (err, stock) => {
       if (err) return console.error(err)
       if (!stock) {
         stock = new Stock({
@@ -53,7 +53,7 @@ io.on('connection', socket => {
   })
   /* delete stock from databse */
   socket.on('delete-stock', stockToDelete => {
-    Stock.findOneAndRemove({name: stockToDelete}, (err, stock) => {
+    Stock.findOneAndRemove({name: stockToDelete.toUpperCase()}, (err, stock) => {
       if (err) return console.error(err)
       console.log('deleting stock from the database')
       console.log(stock)
