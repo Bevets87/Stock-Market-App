@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import _ from 'lodash'
 
 import io from 'socket.io-client'
-var socket = io.connect('https://fcc-stock-market-application.herokuapp.com')
+const socket = io.connect('https://fcc-stock-market-application.herokuapp.com/')
 
 import StockChart from './StockChart'
 
@@ -28,6 +28,7 @@ class App extends Component {
     socket.emit('get-stocks')
     // receive init stocks from database
     socket.on('get-stocks', stock => {
+      console.log(stock)
       var stocks = this.state.stocks.slice()
       stocks.push(stock)
       this.setState({

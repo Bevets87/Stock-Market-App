@@ -15,9 +15,6 @@ const api_key = 'JntJ6C3cd_kuJDkJ9pMs'
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(bodyParser.json())
 app.use(express.static(path.join(__dirname, '../../dist' )))
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../dist/index.html'))
-})
 
 io.on('connection', socket => {
   /* add stock to database */
@@ -33,10 +30,10 @@ io.on('connection', socket => {
           console.log('added stock to database')
           console.log(stock)
           var date = new Date()
-          var start_date = (date.getFullYear() - 1) + '-' + date.getDate() + '-' + date.getDay()
-          var end_date = date.getFullYear() + '-' + date.getDate() + '-' + date.getDay()
+          var start_date = (date.getFullYear() - 1) + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+          var end_date = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
           console.log('making request to quandl')
-          axios.get(`https://www.quandl.com/api/v3/datasets/WIKI/${stock.name}.json?start_date=${start_date}&end_date=${end_date}&api_key=${process.env.API_KEY || api_key}`)
+          axios.get(`https://www.quandl.com/api/v3/datasets/WIKI/${stock.name}.json?start_date=${start_date}&end_date=${end_date}&api_key=${process.env.API_KEY}`)
           .then(response => {
             io.emit('add-stock', {name: stock.name, id: stock._id, data: response.data})
           })
@@ -70,10 +67,10 @@ io.on('connection', socket => {
       if (err) return console.error(err)
       stocks.map( stock => {
         var date = new Date()
-        var start_date = (date.getFullYear() - 1) + '-' + date.getDate() + '-' + date.getDay()
-        var end_date = date.getFullYear() + '-' + date.getDate() + '-' + date.getDay()
+        var start_date = (date.getFullYear() - 1) + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+        var end_date = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
         console.log('making request to quandl')
-        axios.get(`https://www.quandl.com/api/v3/datasets/WIKI/${stock.name}.json?start_date=${start_date}&end_date=${end_date}&api_key=${process.env.API_KEY || api_key}`)
+        axios.get(`https://www.quandl.com/api/v3/datasets/WIKI/${stock.name}.json?start_date=${start_date}&end_date=${end_date}&api_key=${process.env.API_KEY}`)
           .then(response => {
             io.emit('get-stocks', {name: stock.name, id: stock._id, data: response.data})
           })
@@ -84,6 +81,10 @@ io.on('connection', socket => {
     })
   })
 
+})
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../dist/index.html'))
 })
 
 /* connect to database in the form of mongodb */
