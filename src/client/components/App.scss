@@ -1,23 +1,83 @@
+@import url('https://fonts.googleapis.com/css?family=Playfair+Display+SC');
+.app-container {
+  border-radius: 10px;
+  width: 100%;
+  height: 95vh;
+  margin: 2.5vh auto;
+  font-family: 'Playfair Display SC', serif;
 
-.search-container {
-  margin-top: 50px;
+.title-container {
   text-align: center;
-  input {
-    width: 40%;
-    height: 50px;
-    font-size: 25px;
-    text-align: right;
+  margin-bottom: 20px;
+  @media (max-width: 768px) {
+    margin-bottom: 0px;
   }
-  button {
-    height: 50px;
-    font-size: 25px;
+  h1 {
+    margin-top: 0;
+    margin-left: 20px;
+    font-size: 60px;
+    float: left;
+    @media (max-width: 768px) {
+      display: block;
+      float: none;
+      margin: 0 auto;
+    }
+    @media (max-width: 600px) {
+      font-size: 50px;
+    }
   }
 
+
+  .error {
+    float: right;
+    color: darkred;
+    margin-top: 25px;
+    margin-right: 20px;
+    @media (max-width: 768px) {
+      display: block;
+      float: none;
+      margin: 0px auto;
+    }
+  }
+  .search-container {
+    float: right;
+    text-align: center;
+    margin-top: 10px;
+    margin-right: 10px;
+    @media (max-width: 768px) {
+      display: block;
+      margin: 10px auto;
+      float: none;
+    }
+    input {
+      height: 50px;
+      font-size: 25px;
+      text-align: right;
+      @media (max-width: 768px) {
+        font-size: 20px;
+      }
+      @media (max-width: 600px) {
+        font-size: 14px;
+      }
+    }
+    button {
+      height: 50px;
+      font-size: 25px;
+      @media (max-width: 768px) {
+        font-size: 20px;
+      }
+      @media (max-width: 600px) {
+        font-size: 14px;
+      }
+    }
+  }
+}
 }
 
 .stock-container {
   margin-top: 50px;
-  background: darkgreen;
-  text-align: center
+  text-align: center;
+  background: rgba(0,0,0,0.1);
+  border-radius: 10px;
 
 }

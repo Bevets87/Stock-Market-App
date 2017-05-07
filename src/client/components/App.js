@@ -82,26 +82,31 @@ class App extends Component {
     const { stocks, stock, error } = this.state
     return (
       <div>
+      <div className='app-container'>
+      <div className='title-container'>
+      <h1>$tock Chart$</h1>
+      <div className='search-container'>
+        <input onChange={this.handleInputStock} type='text' placeholder='search a stock symbol' value={stock}/>
+        <button onClick={this.handleSubmitStock}>Submit</button>
+      </div>
+      {error && <h4 className='error'>{error}</h4>}
+      </div>
       <StockChart stocks={stocks} />
       <div className='container-fluid stocks-container'>
         <div className='row'>
           {stocks.map(stock => {
             return (
-              <div key={stock.id} className='col-md-4'>
-                <div className='col-md-12 stock-container'>
+              <div key={stock.id} className='col-sm-2'>
+                <div className='col-sm-12 stock-container'>
                   <h1>{stock.name}</h1>
-                  <button value={stock.name} onClick={this.handleDeleteStock} className='btn btn-warning'>Delete</button>
+                  <button value={stock.name} onClick={this.handleDeleteStock} className='btn'>Delete</button>
                 </div>
               </div>
             )
           })}
         </div>
       </div>
-      <div className='search-container'>
-        <input onChange={this.handleInputStock} type='text' value={stock}/>
-        <button onClick={this.handleSubmitStock}>Submit</button>
-      </div>
-      {error && <h1>{error}</h1>}
+    </div>
     </div>
     )
   }

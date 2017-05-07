@@ -1,7 +1,12 @@
-@import url('https://fonts.googleapis.com/css?family=Playfair+Display+SC');
-
 .chart-container {
- width: 90%;
- margin: 50px auto;
- font-family: 'Playfair Display SC', serif;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  text-align: center;
+  h3 {
+    margin-top: 15px;
+    @media (max-width: 600px) {
+      font-size: 18px;
+    }
+  }
 }
