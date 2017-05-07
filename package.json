@@ -2,13 +2,13 @@
   "name": "stock-market-app",
   "version": "1.0.0",
   "description": "An application that allows users to add stocks and visualize results immediately",
-  "main": "./src/server/app.dev.js",
+  "main": "./src/server/app.prod.js",
   "scripts": {
     "build": "webpack --config ./webpack.config.prod.js -p --progress --colors",
     "remove-build": "node_modules/.bin/rimraf ./dist",
     "dev": "nodemon --watch src/server --exec babel-node -- ./src/server/app.dev.js",
     "prod": "babel-node ./src/server/app.prod.js",
-    "start": "babel-node ./src/server/app.dev.js"
+    "start": "babel-node ./src/server/app.prod.js"
   },
   "author": "steve barton",
   "license": "ISC",
