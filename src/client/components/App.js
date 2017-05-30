@@ -3,10 +3,8 @@ import React, { Component } from 'react'
 import _ from 'lodash'
 
 import io from 'socket.io-client'
-import config from '../../../config'
-const { HOST } = config
 
-const socket = io.connect(HOST)
+const socket = io.connect('https://fcc-stock-market-application.herokuapp.com')
 
 import StockChart from './StockChart'
 
