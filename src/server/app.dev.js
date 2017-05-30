@@ -13,13 +13,16 @@ import webpackHotMiddleware from 'webpack-hot-middleware'
 import webpackConfig from '../../webpack.config.dev'
 const compiler = webpack(webpackConfig)
 
+import config from '../../config'
+const { API_KEY } = config
+
 /* create server */
 let app = express()
 let server = http.createServer(app)
 let io = require('socket.io')(server)
 
 /* set env var */
-const api_key = 'JntJ6C3cd_kuJDkJ9pMs'
+
 
 /* add webpack middleware for use in dev mode */
 app.use(webpackMiddleware(compiler, {
@@ -53,7 +56,7 @@ io.on('connection', socket => {
           var start_date = (date.getFullYear() - 1) + '-' + (date.getMonth() + 1) + '-' + date.getDate()
           var end_date = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
           console.log('making request to quandl')
-          axios.get(`https://www.quandl.com/api/v3/datasets/WIKI/${stock.name}.json?start_date=${start_date}&end_date=${end_date}&api_key=${api_key}`)
+          axios.get(`https://www.quandl.com/api/v3/datasets/WIKI/${stock.name}.json?start_date=${start_date}&end_date=${end_date}&api_key=${process.env.API_KEY || API_KEY}`)
           .then(response => {
             io.emit('add-stock', {name: stock.name, id: stock._id, data: response.data})
           })
@@ -92,7 +95,7 @@ io.on('connection', socket => {
         var start_date = (date.getFullYear() - 1) + '-' + (date.getMonth() + 1) + '-' + date.getDate()
         var end_date = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
         console.log('making request to quandl')
-        axios.get(`https://www.quandl.com/api/v3/datasets/WIKI/${stock.name}.json?start_date=${start_date}&end_date=${end_date}&api_key=${api_key}`)
+        axios.get(`https://www.quandl.com/api/v3/datasets/WIKI/${stock.name}.json?start_date=${start_date}&end_date=${end_date}&api_key=${process.env.API_KEY || API_KEY}`)
           .then(response => {
             io.emit('get-stocks', {name: stock.name, id: stock._id, data: response.data})
           })

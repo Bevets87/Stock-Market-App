@@ -10,8 +10,6 @@ let app = express()
 let server = http.createServer(app)
 let io = require('socket.io')(server)
 
-const api_key = 'JntJ6C3cd_kuJDkJ9pMs'
-
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(bodyParser.json())
 app.use(express.static(path.join(__dirname, '../../dist' )))
