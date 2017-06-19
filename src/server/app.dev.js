@@ -13,7 +13,7 @@ import webpackHotMiddleware from 'webpack-hot-middleware'
 import webpackConfig from '../../webpack.config.dev'
 const compiler = webpack(webpackConfig)
 
-import config from '../../config'
+import config from 'config'
 const { API_KEY } = config
 
 /* create server */
